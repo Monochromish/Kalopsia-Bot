@@ -10,7 +10,7 @@ Please Star this Project if you like the bot
 **Music Commands** such as Play, Filter, Seek, etc...,
 **Nsfw Commands** such as Anal, Boobs, 4k, etc...,
 **Utility Commands** such as Avatar, Calculator, Weather, etc...,
-I will be adding some more commands such as giveaway commands and afk system
+I will be adding some more commands such as giveaway commands, say command and afk system soon
 
 ## Installation 📥
 
