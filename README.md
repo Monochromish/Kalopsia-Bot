@@ -16,7 +16,6 @@ I will be adding some more commands such as giveaway commands and afk system
 ## Installation 📥
 
 This bot uses **MongoDB** so if you want to self-host it, you would require a MongoURL
-=> https://account.mongodb.co go to this site and create your MongoURL
 **REFER TO THIS VIDEO FOR HELP => https://www.youtube.com/watch?v=8no3SktqagY**
 
 After you have your MongoURL
