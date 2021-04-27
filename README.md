@@ -1,7 +1,5 @@
 ![MOSHED-2021-4-27-14-48-27](https://user-images.githubusercontent.com/79590499/116218250-f8a58800-a767-11eb-86fa-9c1ea5797100.jpg)
 
-<iframe frameborder="0" width="100%" height="500px" src="https://repl.it/Monochromish/Kalopsia-Bot?lite=true"></iframe>
-
 # Kalopsia-Bot ♣️
 Kalopia Bot is an Open-Source Discord Bot written in JavaScript
 Please Star this Project if you like the bot
