@@ -40,6 +40,7 @@ module.exports = {
         .addField('`kick`', 'Kick someone')
         .addField('`lockchannel / unlockchannel`', 'Lock / Unlock channel')
         .addField('`mute / unmute`', 'Mute someone / Unmute someone')
+        .addField('`say`', 'Control the Bot by making it say anything')
         .addField('`shutdown`', 'Owner Command Only')
         .addField('`slowmode`', 'Add a slowmode to a channel')
         .addField('`warn / unwarn`', 'Warn someone / Unwarn someone')
