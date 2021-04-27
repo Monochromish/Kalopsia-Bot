@@ -10,7 +10,6 @@ Please Star this Project if you like the bot
 **Music Commands** such as Play, Filter, Seek, etc...,
 **Nsfw Commands** such as Anal, Boobs, 4k, etc...,
 **Utility Commands** such as Avatar, Calculator, Weather, etc...,
-And a **Shutdown Command** if you feel something is wrong and needs to be fixed ( Owner Command ),
 I will be adding some more commands such as giveaway commands and afk system
 
 ## Installation 📥
