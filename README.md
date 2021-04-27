@@ -25,9 +25,9 @@ Replace <password> with your MongoDB Password
 And Replace /test at the end with /data
   
 Now, clone the .env.example file and name it .env
-inside the .env file replace <prefix> with a word or a symbol that will be your bot prefix 
-Replace <monogourl> with your MongoURL
-Replace <token> with your bot token
+inside the .env file replace //prefix with a word or a symbol that will be your bot prefix 
+Replace //monogourl with your MongoURL
+Replace //token with your bot token
 
 After thats done, we now need to install some modules and for that go in the terminal and run the command **npm i** / **npm install**
 The command should install all the modules, it would take time
