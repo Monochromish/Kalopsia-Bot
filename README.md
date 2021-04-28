@@ -5,14 +5,14 @@ Kalopia Bot is an Open-Source Discord Bot written in JavaScript
 Please Star this Project if you like the bot
 
 ## Commands 🤖
-**Admin and Moderator Commands** such as Ban, Kick, Mute, Lockchannel, Slowmode, etc..
+**Admin and Moderator Commands** such as Ban, Kick, Mute, Lockchannel, Slowmode, Say, etc..
 **Economy Commands** such as Balance, Deposit, Rob, etc...,
 **Fun Commands** such as 8ball, Kiss, DM, etc...,
 **Meme Commands** such as Triggered, Slap, Meme, etc...,
 **Music Commands** such as Play, Filter, Seek, etc...,
 **Nsfw Commands** such as Anal, Boobs, 4k, etc...,
 **Utility Commands** such as Avatar, Calculator, Weather, etc...,
-I will be adding some more commands such as giveaway commands, say command and afk system soon
+I will be adding some more commands such as giveaway commands & afk system soon
 
 ## Installation 📥
 
