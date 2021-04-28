@@ -87,6 +87,14 @@ module.exports = {
         .setColor('RANDOM')
         .setTimestamp()
 
+        const giveaway = new Discord.MessageEmbed()
+        .setTitle('Giveaway Commands')
+        .addField('`start`', ':Host a giveaway:')
+        .addField('`reroll`', 'Reroll a giveaway')
+        .addField('`end`', 'End a giveaway')
+        .setColor('RANDOM')
+        .setTimestamp()
+
         const utility = new Discord.MessageEmbed()
         .setTitle('Utility Commands')
         .addField('`avatar`', 'Check someones avatar')
@@ -116,6 +124,7 @@ module.exports = {
                 memes,
                 music,
                 nsfw,
+                giveaway,
                 utility,
                 about
         ]
