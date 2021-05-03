@@ -16,6 +16,13 @@ client.giveawaysManager = new GiveawaysManager(client, {
         reaction: "🎉"
     }
 });
+const prefix = process.env.prefix;
+const activities = [
+  "with Monochromish [Bot Dev]",
+  "with commands",
+  "[prefix]help",
+  "with wumpus"
+];
 
 client.giveawaysManager.on("giveawayReactionAdded", (giveaway, member, reaction) => {
     console.log(`${member.user.tag} entered giveaway #${giveaway.messageID} (${reaction.emoji.name})`);
@@ -70,6 +77,13 @@ client.on('ready', () => {
   const mongo_url = process.env.mongo_url;
   console.log("Success - Bot is running");
 
+  setInterval(() => {
+    const randomIndex = Math.floor(Math.random() * (activities.length - 1) + 1);
+    const newActivity = activities[randomIndex];
+
+    client.user.setActivity(newActivity);
+  }, 5000);
+
   mongoose.connect(mongo_url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -81,7 +95,6 @@ client.on('ready', () => {
 client.on('message', async message => {
   const xp = require('./events&functions/xp')
   if (!message.guild) return;
-  const prefix = process.env.prefix;
   xp(message)
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -98,10 +111,6 @@ client.on('message', async message => {
     if (customCommandsName) return message.channel.send(customCommandsName.response)
   }
 
-  client.user.setActivity({
-    type: 'LISTENING',//Here you can change type from LISTENING to WATCHING or STREAMING
-    name: `to commands | ${prefix}help | Bot Made By Monochromish`,//You can also change name to whatever you want the bot to say on the status
-  })
 })
 
 const status = (queue) =>
