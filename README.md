@@ -22,8 +22,8 @@ This bot uses **MongoDB** so if you want to self-host it, you would require a Mo
 
 After you have your MongoURL
 it should look something like this => mongodb+srv://<username>:<password>@cluster0.zzuon.mongodb.net/test,
-Replace <username> with your MongoDB Username,
-Replace <password> with your MongoDB Password,
+Replace **username** with your MongoDB Username,
+Replace **password** with your MongoDB Password,
 And Replace /test at the end with /data
   
 Now, clone the .env.example file and name it .env,
