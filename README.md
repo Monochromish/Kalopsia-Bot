@@ -1,3 +1,5 @@
+### Will update this to Discord.js 13 soon and will add more cmds
+
 ![MOSHED-2021-4-27-14-48-27](https://user-images.githubusercontent.com/79590499/116218250-f8a58800-a767-11eb-86fa-9c1ea5797100.jpg)
 
 [![Run on Repl.it](https://replit.com/badge/github/Monochromish/Kalopsia-Bot)](https://repl.it/github/Monchromish/Kalopsia-Bot)
