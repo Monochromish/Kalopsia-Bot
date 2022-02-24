@@ -43,7 +43,7 @@ And that's it, your bot should be running
 
 ## Came across an issue? or need help with the bot? ℹ️
 
-If you find a bug or if you are facing it difficulties in hosting the bot, Contact me on Discord... **500315184510795819** <= this is my ID
+If you find a bug or if you are facing it difficulties in hosting the bot, Contact me on Discord... **500315184510795819** <= this is my ID or join my [development server](https://discord.gg/E6z5ZmsV4m).
 
 ## Credit & Support ❤️
 
