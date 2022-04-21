@@ -17,6 +17,8 @@ With features such as
 - MongoDB Integration
 - And many more!
 
+Feeling experimental? Want to try Kalopsia Bot before building? [Invite the public version to your Discord Server!](https://discord.com/oauth2/authorize?client_id=966786765132267581&scope=bot%20applications.commands&permissions=8) (Up to date)
+
 ## Requirements
 
 - [Node.js](https://nodejs.org)
