@@ -27,6 +27,7 @@ With features such as
 ## Installation
 
 You can either choose to download this repository files directly or clone
+
 If you choose to clone, Make sure to have [Git](https://git-scm.com) installed and run the command given below in directory of your choice.
 
 ```console
@@ -36,20 +37,27 @@ git clone https://github.com/Monochromish/Kalopsia-Bot.git && cd Kalopsia-Bot
 ## Setup
 
 Kalopsia Bot works on MongoDB
+
 For self-hosting, you would have to get a MongoURL
+
 **Refer to [this video for help](https://www.youtube.com/watch?v=8no3SktqagY)**
 
 Duplicate the `example.env` file and rename it to `.env`
+
 Modify the `.env` file
 
 Run `npm install --save` in the console
+
 OR
+
 Run `yarn install` in the console (Recommended)
 
 ## Self Hosting
 
 Run `node .` in the console
+
 OR
+
 Run `yarn run run` in the console (Recommended)
 
 Bot should now be running on token provided in `.env` file.
@@ -61,8 +69,12 @@ Feel free to open an issue on this repository. You can also contact me on Discor
 ## Notice & Credits
 
 I have removed Music commands but I'll be adding a music system, possibly a button one and working on economy system soon. Stay tuned!
+
 I'll later create a wiki for this repository, which will have guides to contribute and report and shit.
 
+
 This bot was written by Monochromish.
+
 Thanks to [Jacobin](https://github.com/Jakob5358) for big help in moderation system.
+
 To support this project, star this repository; I'll greatly appreciate it!
