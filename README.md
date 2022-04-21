@@ -1,50 +1,67 @@
-### Will update this to Discord.js 13 soon and will add more cmds
+# Kalopsia Bot ♣️
 
 ![MOSHED-2021-4-27-14-48-27](https://user-images.githubusercontent.com/79590499/116218250-f8a58800-a767-11eb-86fa-9c1ea5797100.jpg)
-
 [![Run on Repl.it](https://replit.com/badge/github/Monochromish/Kalopsia-Bot)](https://repl.it/github/Monchromish/Kalopsia-Bot)
-# Kalopsia-Bot ♣️
-Kalopia Bot is an Open-Source Discord Bot written in JavaScript
-Please Star this Project if you like the bot
 
-## Commands 🤖
-**Admin and Moderator Commands** such as Ban, Kick, Mute, Lockchannel, Slowmode, Say, etc..
-**Economy Commands** such as Balance, Deposit, Rob, etc...,
-**Fun Commands** such as 8ball, Kiss, DM, etc...,
-**Meme Commands** such as Triggered, Slap, Meme, etc...,
-**Music Commands** such as Play, Filter, Seek, etc...,
-**Nsfw Commands** such as Anal, Boobs, 4k, etc...,
-**Utility Commands** such as Avatar, Calculator, Weather, etc...,
-I will be adding some more commands such as AFK Commands and Fun Commands
+Kalopsia Bot is an Open-Source Discord.js v13 Bot
 
-## Installation 📥
+With features such as
 
-This bot uses **MongoDB** so if you want to self-host it, you would require a MongoURL
-**REFER TO THIS VIDEO FOR HELP => https://www.youtube.com/watch?v=8no3SktqagY**
+- Slash Commands
+- Staff Commands
+- Fun and Entertaining Commands
+- Utility Commands
+- NSFW Commands
+- Economy System
+- MongoDB Integration
+- And many more!
 
-After you have your MongoURL
-it should look something like this => mongodb+srv://<username>:<password>@cluster0.zzuon.mongodb.net/test,
-Replace **username** with your MongoDB Username,
-Replace **password** with your MongoDB Password,
-And Replace /test at the end with /data
-  
-Now, clone the .env.example file and name it .env,
-inside the .env file replace "prefix" with a word or a symbol that will be your bot prefix,
-Replace "monogourl" with your MongoURL,
-Replace "token" with your bot token
+## Requirements
 
-After thats done, we now need to install some modules and for that go in the terminal and run the command **npm i** / **npm install**
-The command should install all the modules, it would take time
+- [Node.js](https://nodejs.org)
+- [Yarn](https://yarnpkg.com) (Recommended although NPM can also be used)
+- [Git](https://git-scm.com) (Git is optional since you can just install the repository directly)
+- Experience with [JavaScript](https://www.learn-js.org) and [Discord.js](https://discord.js.org) (Preferably Discord.js v13)
 
-## Self Hosting 🚩
+## Installation
 
-After you have Installed the modules and modified the configuration file (.env file), You can now run the bot by using the command **node .**
-And that's it, your bot should be running
+You can either choose to download this repository files directly or clone
+If you choose to clone, Make sure to have [Git](https://git-scm.com) installed and run the command given below in directory of your choice.
 
-## Came across an issue? or need help with the bot? ℹ️
+```console
+git clone https://github.com/Monochromish/Kalopsia-Bot.git && cd Kalopsia-Bot
+```
 
-If you find a bug or if you are facing it difficulties in hosting the bot, Contact me on Discord... **500315184510795819** <= this is my ID or join my [development server](https://discord.gg/E6z5ZmsV4m).
+## Setup
 
-## Credit & Support ❤️
+Kalopsia Bot works on MongoDB
+For self-hosting, you would have to get a MongoURL
+**Refer to [this video for help](https://www.youtube.com/watch?v=8no3SktqagY)**
 
-**This bot was fully made by Monochromish (500315184510795819)**
+Duplicate the `example.env` file and rename it to `.env`
+Modify the `.env` file
+
+Run `npm install --save` in the console
+OR
+Run `yarn install` in the console (Recommended)
+
+## Self Hosting
+
+Run `node .` in the console
+OR
+Run `yarn run run` in the console (Recommended)
+
+Bot should now be running on token provided in `.env` file.
+
+## Came across any bugs? Found typos? Or facing difficulties in self hosting?
+
+Feel free to open an issue on this repository. You can also contact me on Discord: [Monochromish](https://discord.com/users/500315184510795819)!
+
+## Notice & Credits
+
+I have removed Music commands but I'll be adding a music system, possibly a button one and working on economy system soon. Stay tuned!
+I'll later create a wiki for this repository, which will have guides to contribute and report and shit.
+
+This bot was written by Monochromish.
+Thanks to [Jacobin](https://github.com/Jakob5358) for big help in moderation system.
+To support this project, star this repository; I'll greatly appreciate it!
