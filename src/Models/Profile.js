@@ -8,6 +8,9 @@ module.exports = model(
     Bank: Number,
     lastDaily: Date,
     lastWeekly: Date,
-    lastMonthly: Date
+    lastMonthly: Date,
+    BluechipChoice: Number,
+    RisingChoice: Number,
+    LastVote: Number,
   })
 );

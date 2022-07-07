@@ -5,48 +5,59 @@ const axios = require('axios').default;
 const Profile = require('../Models/Profile');
 
 module.exports = {
-  getRandomString: length => {
+  getRandomString: (length) => {
     const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     for (let i = 0; i < length; i++) {
-      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+      result += randomChars.charAt(
+        Math.floor(Math.random() * randomChars.length)
+      );
     }
     return result;
   },
   search: promisify(glob),
   sleep: promisify(setTimeout),
-  pretty: str => str[0].toUpperCase() + str.slice(1).toLowerCase(),
-  plural: num => (num === 1 ? '' : 's'),
+  pretty: (str) => str[0].toUpperCase() + str.slice(1).toLowerCase(),
+  plural: (num) => (num === 1 ? '' : 's'),
   confirm: async (interaction, embed) => {
     const msg = await interaction.reply({
       embeds: [embed],
       components: [
         new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('proceed').setStyle('SUCCESS').setLabel('Proceed'),
-          new MessageButton().setCustomId('cancel').setStyle('DANGER').setLabel('Cancel')
-        )
+          new MessageButton()
+            .setCustomId('proceed')
+            .setStyle('SUCCESS')
+            .setLabel('Proceed'),
+          new MessageButton()
+            .setCustomId('cancel')
+            .setStyle('DANGER')
+            .setLabel('Cancel')
+        ),
       ],
-      fetchReply: true
+      fetchReply: true,
     });
 
     const i = await msg
-      .awaitMessageComponent({ time: 1000 * 60, filter: i => i.user.id === interaction.user.id })
+      .awaitMessageComponent({
+        time: 1000 * 60,
+        filter: (i) => i.user.id === interaction.user.id,
+      })
       .catch(() => null);
     if (!i)
       return {
         proceed: false,
         reason: 'Reason: Inactivity Timeout',
-        i
+        i,
       };
 
     if (i.customId === 'proceed')
       return {
         proceed: true,
-        i
+        i,
       };
     return {
       proceed: false,
-      i
+      i,
     };
   },
   getResponse: async function getResponse(url) {
@@ -55,13 +66,13 @@ module.exports = {
       return {
         success: true,
         status: res.status,
-        data: res.data
+        data: res.data,
       };
     } catch (error) {
       return {
         success: false,
         status: error.response?.status,
-        data: error.response?.data
+        data: error.response?.data,
       };
     }
   },
@@ -76,7 +87,10 @@ module.exports = {
         lastDaily: new Date(),
         lastWeekly: new Date(),
         lastMonthly: new Date(),
-        passiveUpdated: new Date()
+        passiveUpdated: new Date(),
+        bluechipChoice: 0,
+        risingChoice: 0,
+        lastVote: 0, //최근 참여한 투표 넘버로 참여여부 확인
       }).save();
       return true;
     }
@@ -88,8 +102,11 @@ module.exports = {
     while (currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
     }
     return array;
-  }
+  },
 };
