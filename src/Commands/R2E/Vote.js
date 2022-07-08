@@ -9,7 +9,14 @@ const {
 const Profile = require('../../Models/Profile');
 const { createProfile } = require('../../Structures/Utils');
 require('dotenv').config();
-const Config = require('./Config');
+const Config = require('../../Config');
+const R = require('ramda');
+const request = require('../../Structures/Request');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+const adapter = new FileSync('db.json');
+const db = low(adapter);
+
 module.exports = {
   name: 'vote',
   description: 'NFT 투표 시작/종료!',
@@ -31,79 +38,6 @@ module.exports = {
   run: async ({ interaction, options, bot, guild }) => {
     // console.log(interaction);
     if (!interaction.isCommand()) return;
-    const buttons = [
-      // 각 버튼을 배열(array) 자료구조로 만들어요
-      {
-        customId: 'bluechipButton',
-        label: 'Bluechip 투표하기',
-        style: 'PRIMARY',
-        async action(interaction) {
-          // console.log('sendButton!', { interaction });
-          // const message = await interaction.message.fetch();
-          // console.log('meesage:::::', message.interaction);
-
-          const selectBluechipNFTRow = new MessageActionRow().addComponents(
-            new MessageSelectMenu()
-              .setCustomId('selectBluechip')
-              .setPlaceholder('select Bluechip NFT')
-              .addOptions([
-                {
-                  label: 'BAYC',
-                  description: 'Bored Ape Yacht Club',
-                  value: 'BAYC',
-                },
-                {
-                  label: 'DOODLES',
-                  description: 'Doodles',
-                  value: 'DOODLES',
-                },
-                {
-                  label: 'CLONEX',
-                  description: 'CloneX',
-                  value: 'CLONEX',
-                },
-              ])
-          );
-          await interaction.reply({
-            components: [selectBluechipNFTRow],
-            ephemeral: true,
-          });
-        },
-      },
-      {
-        customId: 'risingButton',
-        label: 'Rising 투표하기',
-        style: 'PRIMARY',
-        async action(interaction) {
-          const selectRisingNFTRow = new MessageActionRow().addComponents(
-            new MessageSelectMenu()
-              .setCustomId('selectRising')
-              .setPlaceholder('select Rising NFT')
-              .addOptions([
-                {
-                  label: 'BAYC',
-                  description: 'Bored Ape Yacht Club',
-                  value: 'BAYC',
-                },
-                {
-                  label: 'DOODLES',
-                  description: 'Doodles',
-                  value: 'DOODLES',
-                },
-                {
-                  label: 'CLONEX',
-                  description: 'CloneX',
-                  value: 'CLONEX',
-                },
-              ])
-          );
-          await interaction.reply({
-            components: [selectRisingNFTRow],
-            ephemeral: true,
-          });
-        },
-      },
-    ];
 
     // filter : 버튼에 지정된 customId만 message collector가 동작할 수 있게 함
     const filter = (i) => {
@@ -117,21 +51,104 @@ module.exports = {
     });
 
     if (interaction.options.get('option').value === 'poll_start') {
-      const { Client } = require('@notionhq/client');
-      const notion = new Client({
-        auth: process.env.NOTION_ACCESS_TOKEN,
-      });
-      try {
-        const databaseGeneralId = Config.notionAPI.general;
-        const response = await notion.databases.query({
-          database_id: databaseGeneralId,
-        });
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-
       const messages = await interaction.channel.messages.fetch();
+
+      //투표가 정상적으로 종료되었을경우, 아직 시작하지 않았을 경우에는 GoogleSheet에서 값을 fetch
+      //그 외(기타 명령어시 데이터, 비정상 종료 후 재시작)는 lowdb에서 긁어온다.
+
+      //lowdb에서 현재 투표 상태를 읽어옴
+      const isVoting = db.get('voteStatus').value().isVoting;
+      console.log('db::isVoting', isVoting);
+      //isVoting: false - 정상 / true - 비정상
+      if (
+        isVoting &&
+        db.get('bluechipList').value()?.length > 0 &&
+        db.get('risingList').value()?.length > 0
+      ) {
+        //비정상종료된 voting
+        //fetch lowdb
+      } else {
+        //fetch googleSheet
+        const apiKey = process.env.GOOGLE_ACCESS_TOKEN;
+        const spreadsheetId = Config.google.databaseKey;
+        const sheetName = ['general', 'bluechip', 'rising'];
+        try {
+          const response = await request({
+            method: 'GET',
+            url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName[0]}?key=${apiKey}`,
+            json: true,
+            maskResponse: ({ Data, ...rest }, mask) => ({
+              ...rest,
+              Data: mask,
+            }),
+          });
+          db.get('voteStatus')
+            .assign({
+              isVoting: true,
+              voteId: response.values[1][0],
+              voteTitle: response.values[1][1],
+            })
+            .write();
+        } catch (error) {
+          console.error(error);
+        }
+        try {
+          const response = await request({
+            method: 'GET',
+            url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName[1]}?key=${apiKey}`,
+            json: true,
+            maskResponse: ({ Data, ...rest }, mask) => ({
+              ...rest,
+              Data: mask,
+            }),
+          });
+          console.log(response.values);
+          const bluechipList = [];
+          response.values.slice(1).forEach((e) => {
+            bluechipList.push({ name: e[0], id: e[1] });
+          });
+          db.get('bluechipList').remove().write();
+          db.get('bluechipList').assign(bluechipList).write();
+        } catch (error) {
+          console.error(error);
+        }
+        try {
+          const response = await request({
+            method: 'GET',
+            url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName[2]}?key=${apiKey}`,
+            json: true,
+            maskResponse: ({ Data, ...rest }, mask) => ({
+              ...rest,
+              Data: mask,
+            }),
+          });
+          console.log(response.values);
+          const risingList = [];
+          response.values.slice(1).forEach((e) => {
+            risingList.push({ name: e[0], id: e[1] });
+          });
+          db.get('risingList').remove().write();
+          db.get('risingList').assign(risingList).write();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      // const bluechipList = db.get('bluechipList').value();
+      // const risingList = db.get('risingList').value();
+      const buttons = [
+        // 각 버튼을 배열(array) 자료구조로 만들어요
+        {
+          customId: 'bluechipButton',
+          label: 'Bluechip 투표하기',
+          style: 'PRIMARY',
+        },
+        {
+          customId: 'risingButton',
+          label: 'Rising 투표하기',
+          style: 'PRIMARY',
+        },
+      ];
+
       // console.log({ messages });
       messages.forEach((value, key, object) => {
         //이전 투표 명령어 메시지를 다 삭제
@@ -177,6 +194,11 @@ module.exports = {
       });
 
       await interaction.reply(`투표가 종료되었습니다.`);
+      db.get('voteStatus')
+        .assign({
+          isVoting: false,
+        })
+        .write();
     }
     collector.on('collect', async (interaction) => {
       // 배열(buttons array)에 있는 동작을 자동으로 읽음
@@ -213,11 +235,6 @@ module.exports = {
             ],
           });
         }
-
-        // await interaction.reply({
-        //   content: `${interaction.values[0]}에 투표하셨습니다.`,
-        //   ephemeral: true,
-        // });
         const voteData = {
           target: interaction.customId,
           id: interaction.user.id,
@@ -225,13 +242,81 @@ module.exports = {
           value: interaction.values[0],
         };
         console.log({ voteData });
+
+        if (!db.get('voteUser').find({ id: interaction.user.id }).value()) {
+          db.get('voteUser')
+            .push({
+              id: interaction.user.id,
+              userName: interaction.user.username,
+              bluechipChoice: '',
+              risingChoice: '',
+            })
+            .write();
+        }
+
+        if (interaction.customId === 'selectBluechip') {
+          db.get('voteUser')
+            .find({ id: interaction.user.id })
+            .assign({
+              id: interaction.user.id,
+              userName: interaction.user.username,
+              bluechipChoice: interaction.values[0],
+            })
+            .write();
+        } else if (interaction.customId === 'selectRising') {
+          db.get('voteUser')
+            .find({ id: interaction.user.id })
+            .assign({
+              id: interaction.user.id,
+              userName: interaction.user.username,
+              risingChoice: interaction.values[0],
+            })
+            .write();
+        }
+
         return;
       }
       if (interaction.isButton()) {
-        const button = buttons.find(
-          (button) => button.customId === interaction.customId
-        );
-        await button.action(interaction);
+        if (interaction.customId === 'bluechipButton') {
+          const bluechipList = db.get('bluechipList').value();
+
+          const selectBluechipNFTRow = new MessageActionRow().addComponents(
+            new MessageSelectMenu()
+              .setCustomId('selectBluechip')
+              .setPlaceholder('select Bluechip NFT')
+              .addOptions(
+                bluechipList.map((e) => ({
+                  label: e.name,
+                  description: e.name,
+                  value: e.name,
+                }))
+              )
+          );
+
+          await interaction.reply({
+            components: [selectBluechipNFTRow],
+            ephemeral: true,
+          });
+        } else if (interaction.customId === 'risingButton') {
+          const risingList = db.get('risingList').value();
+          const selectRisingNFTRow = new MessageActionRow().addComponents(
+            new MessageSelectMenu()
+              .setCustomId('selectRising')
+              .setPlaceholder('select Rising NFT')
+              .addOptions(
+                risingList.map((e) => ({
+                  label: e.name,
+                  description: e.name,
+                  value: e.name,
+                  address: e.id,
+                }))
+              )
+          );
+          await interaction.reply({
+            components: [selectRisingNFTRow],
+            ephemeral: true,
+          });
+        }
       }
     });
     // 버튼 이벤트 종료 (여기에서는 시간초과)가 됐을때, 뭘 할지 정의

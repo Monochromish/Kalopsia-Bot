@@ -88,9 +88,6 @@ module.exports = {
         lastWeekly: new Date(),
         lastMonthly: new Date(),
         passiveUpdated: new Date(),
-        bluechipChoice: 0,
-        risingChoice: 0,
-        lastVote: 0, //최근 참여한 투표 넘버로 참여여부 확인
       }).save();
       return true;
     }
