@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const {
   MessageActionRow,
   MessageButton,
@@ -23,13 +22,19 @@ module.exports = {
   options: [
     {
       name: 'option',
-      value: 'poll_start',
-      description: '시작',
+      description:
+        'start(투표시작) / end(투표종료) / result(투표결과 계산) / clear(이전 투표기록 삭제)',
       required: true,
       type: 'STRING',
       choices: [
         { name: 'start', value: 'poll_start' },
         { name: 'end', value: 'poll_end' },
+        { name: 'result', value: 'poll_result' },
+        {
+          name: 'clear',
+          value: 'poll_clear',
+          description: '이전 투표 데이터를 삭제합니다.',
+        },
       ],
     },
   ],
@@ -40,17 +45,20 @@ module.exports = {
     if (!interaction.isCommand()) return;
 
     // filter : 버튼에 지정된 customId만 message collector가 동작할 수 있게 함
-    const filter = (i) => {
-      return i.user.id === interaction.user.id;
-    };
+    // const filter = (i) => {
+    //   return i.user.id === interaction.user.id;
+    // };
 
     // collector : discord.js component event를 수집하는 객체
     const collector = interaction.channel.createMessageComponentCollector({
       // filter,
       // time: 60 * 3000, // 몇초동안 반응할 수 있는지, ms단위라서 3초면 3000으로 입력
     });
-
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////START///////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     if (interaction.options.get('option').value === 'poll_start') {
+      await interaction.reply('Loading...(Working on it.)');
       const messages = await interaction.channel.messages.fetch();
 
       //투표가 정상적으로 종료되었을경우, 아직 시작하지 않았을 경우에는 GoogleSheet에서 값을 fetch
@@ -68,6 +76,7 @@ module.exports = {
         //비정상종료된 voting
         //fetch lowdb
       } else {
+        //정상종료된 voting
         //fetch googleSheet
         const apiKey = process.env.GOOGLE_ACCESS_TOKEN;
         const spreadsheetId = Config.google.databaseKey;
@@ -92,6 +101,7 @@ module.exports = {
         } catch (error) {
           console.error(error);
         }
+
         try {
           const response = await request({
             method: 'GET',
@@ -102,7 +112,6 @@ module.exports = {
               Data: mask,
             }),
           });
-          console.log(response.values);
           const bluechipList = [];
           response.values.slice(1).forEach((e) => {
             bluechipList.push({ name: e[0], id: e[1] });
@@ -122,7 +131,6 @@ module.exports = {
               Data: mask,
             }),
           });
-          console.log(response.values);
           const risingList = [];
           response.values.slice(1).forEach((e) => {
             risingList.push({ name: e[0], id: e[1] });
@@ -153,7 +161,8 @@ module.exports = {
       messages.forEach((value, key, object) => {
         //이전 투표 명령어 메시지를 다 삭제
         try {
-          if (value.interaction.commandName === '투표')
+          console.log({ value });
+          if (value.interaction.commandName === 'vote')
             value.edit({ components: [] });
         } catch (error) {}
       });
@@ -166,21 +175,30 @@ module.exports = {
             .setStyle(button.style);
         })
       );
+
+      const voteStatus = db.get('voteStatus').value();
       const embed = new MessageEmbed().setTitle(
-        `Choose your Favorite NFT!
+        `
+        ☝️${voteStatus.voteTitle}🚀
+
+        Choose your Favorite NFT!
         1. Bluechip
         2. Rising
         `
       );
 
       // 디스코드에 출력하는 코드
-      const message = `STARBOYS☝️ FAVORITE NFT CHALENGE!`;
-      await interaction.reply({
-        content: message,
+      // 바로 reply 하면 타이밍 이슈떄문에 오류가 난다.
+      await interaction.editReply({
+        content: 'NFT Vote Message',
         components: [buttonRow],
         embeds: [embed],
       });
-    } else if (interaction.options.get('option').value === 'poll_end') {
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////END////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    else if (interaction.options.get('option').value === 'poll_end') {
       collector.stop();
 
       const messages = await interaction.channel.messages.fetch();
@@ -188,7 +206,7 @@ module.exports = {
       messages.forEach((value, key, object) => {
         //이전 투표 명령어 메시지를 다 삭제
         try {
-          if (value.interaction.commandName === '투표')
+          if (value.interaction.commandName === 'vote')
             value.edit({ components: [] });
         } catch (error) {}
       });
@@ -200,6 +218,26 @@ module.exports = {
         })
         .write();
     }
+    ///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////RESULT///////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    else if (interaction.options.get('option').value === 'poll_result') {
+      await interaction.reply('Loading...(Working on it.)');
+      const voteId = db.get('voteStatus').value().voteId;
+      const fetchVotingData = db
+        .get('voteUser')
+        .find({ voteId: voteId })
+        .value();
+      const votingData = Array.isArray(fetchVotingData)
+        ? fetchVotingData
+        : [fetchVotingData];
+      const result = votingData.reduce((r, e) => {
+        r[`${e.bluechipChoice}`] = (r[`${e.bluechipChoice}`] || 0) + 1;
+        return r;
+      }, {});
+      console.log({ result });
+      await interaction.editReply('result!');
+    }
     collector.on('collect', async (interaction) => {
       // 배열(buttons array)에 있는 동작을 자동으로 읽음
       if (
@@ -207,45 +245,16 @@ module.exports = {
         (interaction.customId === 'selectBluechip' ||
           interaction.customId === 'selectRising')
       ) {
-        const profile = await Profile.find({
-          UserID: interaction.user.id,
-          GuildID: guild.id,
-        });
-        if (!profile.length) {
-          await createProfile(interaction.user, guild);
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed().setColor('BLURPLE').setDescription(
-                `Creating profile.\n
-                You will have collected Voting Participation Rewards (10€).\n
-                ${interaction.values[0]}에 투표하셨습니다.`
-              ),
-            ],
-          });
-        } else {
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setColor('BLURPLE')
-                .setTitle(`${interaction.user.username}'s Earning`)
-                .setDescription(
-                  `You will have collected Voting Participation Rewards (10€).\n
-                  ${interaction.values[0]}에 투표하셨습니다.`
-                ),
-            ],
-          });
-        }
-        const voteData = {
-          target: interaction.customId,
-          id: interaction.user.id,
-          username: interaction.user.username,
-          value: interaction.values[0],
-        };
-        console.log({ voteData });
-
-        if (!db.get('voteUser').find({ id: interaction.user.id }).value()) {
+        const voteId = db.get('voteStatus').value().voteId;
+        if (
+          !db
+            .get('voteUser')
+            .find({ id: interaction.user.id, voteId: voteId })
+            .value()
+        ) {
           db.get('voteUser')
             .push({
+              voteId: voteId,
               id: interaction.user.id,
               userName: interaction.user.username,
               bluechipChoice: '',
@@ -254,10 +263,42 @@ module.exports = {
             .write();
         }
 
+        const profile = await Profile.find({
+          UserID: interaction.user.id,
+          GuildID: guild.id,
+        });
+
+        if (!profile.length) {
+          await createProfile(interaction.user, guild);
+          await interaction.reply({
+            embeds: [
+              new MessageEmbed().setColor('BLURPLE').setDescription(
+                `Creating profile.\n
+                You will have collected Voting Participation Rewards (${'10€'}).\n
+                ${interaction.values[0]}에 투표하셨습니다.`
+              ),
+            ],
+            ephemeral: true,
+          });
+        } else {
+          await interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setColor('BLURPLE')
+                .setTitle(`${interaction.user.username}'s Earning`)
+                .setDescription(
+                  `You will have collected Voting Participation Rewards (${'10€'}).\n
+                  ${interaction.values[0]}에 투표하셨습니다.`
+                ),
+            ],
+            ephemeral: true,
+          });
+        }
         if (interaction.customId === 'selectBluechip') {
           db.get('voteUser')
-            .find({ id: interaction.user.id })
+            .find({ id: interaction.user.id, voteId: voteId })
             .assign({
+              voteId: voteId,
               id: interaction.user.id,
               userName: interaction.user.username,
               bluechipChoice: interaction.values[0],
@@ -265,8 +306,9 @@ module.exports = {
             .write();
         } else if (interaction.customId === 'selectRising') {
           db.get('voteUser')
-            .find({ id: interaction.user.id })
+            .find({ id: interaction.user.id, voteId: voteId })
             .assign({
+              voteId: voteId,
               id: interaction.user.id,
               userName: interaction.user.username,
               risingChoice: interaction.values[0],
