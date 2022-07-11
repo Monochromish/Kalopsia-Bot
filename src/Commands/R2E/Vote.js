@@ -9,7 +9,6 @@ const Profile = require('../../Models/Profile');
 const { createProfile } = require('../../Structures/Utils');
 require('dotenv').config();
 const Config = require('../../Config');
-const R = require('ramda');
 const request = require('../../Structures/Request');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
