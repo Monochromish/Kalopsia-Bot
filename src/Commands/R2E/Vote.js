@@ -160,7 +160,6 @@ module.exports = {
       messages.forEach((value, key, object) => {
         //이전 투표 명령어 메시지를 다 삭제
         try {
-          console.log({ value });
           if (value.interaction.commandName === 'vote')
             value.edit({ components: [] });
         } catch (error) {}
@@ -188,6 +187,9 @@ module.exports = {
 
       // 디스코드에 출력하는 코드
       // 바로 reply 하면 타이밍 이슈떄문에 오류가 난다.
+      const wait = (timeToDelay) =>
+        new Promise((resolve) => setTimeout(resolve, timeToDelay)); //이와 같이 선언 후
+      await wait(2000);
       await interaction.editReply({
         content: 'NFT Vote Message',
         components: [buttonRow],
