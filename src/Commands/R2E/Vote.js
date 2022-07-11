@@ -49,10 +49,12 @@ module.exports = {
     // };
 
     // collector : discord.js component event를 수집하는 객체
-    const collector = interaction.channel.createMessageComponentCollector({
-      // filter,
-      // time: 60 * 3000, // 몇초동안 반응할 수 있는지, ms단위라서 3초면 3000으로 입력
-    });
+    const collector = await interaction.channel.createMessageComponentCollector(
+      {
+        // filter,
+        // time: 60 * 3000, // 몇초동안 반응할 수 있는지, ms단위라서 3초면 3000으로 입력
+      }
+    );
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////START///////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -224,20 +226,64 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////
     else if (interaction.options.get('option').value === 'poll_result') {
       await interaction.reply('Loading...(Working on it.)');
-      const voteId = db.get('voteStatus').value().voteId;
+      const voteStatus = db.get('voteStatus').value();
+      const voteId = voteStatus.voteId;
+
       const fetchVotingData = db
         .get('voteUser')
-        .find({ voteId: voteId })
-        .value();
+        .value()
+        .filter((e) => e.voteId === voteId);
       const votingData = Array.isArray(fetchVotingData)
         ? fetchVotingData
         : [fetchVotingData];
-      const result = votingData.reduce((r, e) => {
+      const bluechipCountObject = votingData.reduce((r, e) => {
+        // if (e.bluechipChoice && e.bluechipChoice.length > 0) {
         r[`${e.bluechipChoice}`] = (r[`${e.bluechipChoice}`] || 0) + 1;
+        // }
         return r;
       }, {});
-      console.log({ result });
-      await interaction.editReply('result!');
+      const bluechipCountArray = Object.entries(bluechipCountObject).map(
+        (e) => {
+          return { name: e[0], count: e[1] };
+        }
+      );
+      bluechipCountArray.sort((a, b) => b.count - a.count);
+
+      const risingCountObject = votingData.reduce((r, e) => {
+        // if (e.risingChoice && e.risingChoice.length > 0) {
+        r[`${e.risingChoice}`] = (r[`${e.risingChoice}`] || 0) + 1;
+        // }
+        return r;
+      }, {});
+      const risingCountArray = Object.entries(risingCountObject).map((e) => {
+        return { name: e[0], count: e[1] };
+      });
+      risingCountArray.sort((a, b) => b.count - a.count);
+
+      const bluechipRank3 = bluechipCountArray.slice(0, 3);
+      const risingRank3 = risingCountArray.slice(0, 3);
+      console.log({ voteId, bluechipRank3, risingRank3 });
+
+      const embed = new MessageEmbed().setTitle(
+        `
+        ☝️${voteStatus.voteTitle}🚀
+        <RANK RESULT> 
+
+        - Bluechip RANK
+        1️⃣ : ${bluechipRank3[0].name}
+        2️⃣ : ${bluechipRank3[1].name}
+        3️⃣ : ${bluechipRank3[2].name}
+
+        - Rising RANK
+        1️⃣ : ${risingRank3[0].name}
+        2️⃣ : ${risingRank3[1].name}
+        3️⃣ : ${risingRank3[2].name}
+        `
+      );
+      await interaction.editReply({
+        content: 'NFT Vote Rank Result',
+        embeds: [embed],
+      });
     }
     collector.on('collect', async (interaction) => {
       // 배열(buttons array)에 있는 동작을 자동으로 읽음

@@ -1,14 +1,13 @@
 {
-  "name": "kalopsia-bot",
-  "version": "2.0.0",
+  "name": "starboys-bot",
+  "version": "0.9.0",
   "main": "src/Main.js",
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon --watch dist",
     "run": "node ."
   },
-  "repository": "https://github.com/Monochromish/Kalopsia-Bot.git",
-  "author": "Monochromish",
+  "author": "snoo",
   "license": "MIT",
   "dependencies": {
     "@iamtraction/google-translate": "^1.1.2",
