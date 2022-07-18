@@ -1,6 +1,7 @@
 module.exports = {
   botOptions: {
     intents: ['32767'], // To learn more about intents, go to Discord Developer Portal.
+    partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
   },
   guildOnly: {
     enabled: true,
