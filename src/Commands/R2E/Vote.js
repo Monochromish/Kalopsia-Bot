@@ -14,6 +14,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
+const { reward } = require('../../Config');
 
 module.exports = {
   name: 'vote',
@@ -270,21 +271,76 @@ module.exports = {
         <RANK RESULT> 
 
         - Bluechip RANK
-        1️⃣ : ${bluechipRank3[0].name}
-        2️⃣ : ${bluechipRank3[1].name}
-        3️⃣ : ${bluechipRank3[2].name}
+        1️⃣ : ${bluechipRank3[0]?.name}
+        2️⃣ : ${bluechipRank3[1]?.name}
+        3️⃣ : ${bluechipRank3[2]?.name}
 
         - Rising RANK
-        1️⃣ : ${risingRank3[0].name}
-        2️⃣ : ${risingRank3[1].name}
-        3️⃣ : ${risingRank3[2].name}
+        1️⃣ : ${risingRank3[0]?.name}
+        2️⃣ : ${risingRank3[1]?.name}
+        3️⃣ : ${risingRank3[2]?.name}
         `
       );
       await interaction.editReply({
         content: 'NFT Vote Rank Result',
         embeds: [embed],
       });
+
+      // 랭킹 reward지급 //
+      const voteRewarded = db.get('voteRewarded').value();
+      if (voteRewarded.includes(voteId)) {
+        //이미 지급
+      } else {
+        //미지급
+        fetchVotingData.forEach(async (e) => {
+          let profile = await Profile.find({
+            UserID: e.id,
+            GuildID: guild.id,
+          });
+          if (!profile.length) {
+            await createProfile(interaction.user, guild);
+          }
+          const users = await bot.guilds.cache.get(guild.id);
+          const member = await users.members.cache.get(e.id);
+
+          if (member.roles.cache.find((e) => e.id === '969414258116923392')) {
+            await Profile.updateOne(
+              { UserID: e.id, GuildID: guild.id },
+              { $inc: { Wallet: Number(reward.holder.voteReward) } }
+            );
+            if (e.bluechipChoice === bluechipRank3[0].name) {
+              await Profile.updateOne(
+                { UserID: e.id, GuildID: guild.id },
+                { $inc: { Wallet: Number(reward.holder.Rank1Reward) } }
+              );
+            }
+            // if (e.bluechipChoice === bluechipRank3[1].name) {
+            // }
+            // if (e.bluechipChoice === bluechipRank3[2].name) {
+            // }
+
+            if (e.risingChoice === risingRank3[0].name) {
+              await Profile.updateOne(
+                { UserID: e.id, GuildID: guild.id },
+                { $inc: { Wallet: Number(reward.holder.Rank1Reward) } }
+              );
+            }
+            // if (e.risingChoice === risingRank3[1].name) {
+            // }
+            // if (e.risingChoice === risingRank3[2].name) {
+            // }
+          } else {
+            await Profile.updateOne(
+              { UserID: e.id, GuildID: guild.id },
+              { $inc: { Wallet: Number(reward.general.voteReward) } }
+            );
+          }
+        });
+        db.get('voteRewarded').assign(voteId).write();
+      }
     }
+
+    ////////////select 투표 처리//////////////////////
     collector.on('collect', async (interaction) => {
       // 배열(buttons array)에 있는 동작을 자동으로 읽음
       if (
@@ -293,6 +349,28 @@ module.exports = {
           interaction.customId === 'selectRising')
       ) {
         const voteId = db.get('voteStatus').value().voteId;
+
+        let profile = await Profile.find({
+          UserID: interaction.user.id,
+          GuildID: guild.id,
+        });
+        const users = await bot.guilds.cache.get(guild.id);
+        const member = await users.members.cache.get(interaction.user.id);
+        let voteReward;
+        if (
+          member.roles.cache.find(
+            (e) => interaction.user.id === '969414258116923392'
+          )
+        ) {
+          voteReward = reward.holder.voteReward;
+        } else {
+          voteReward = reward.general.voteReward;
+        }
+        //계좌 없으면 개설
+        if (!profile.length) {
+          await createProfile(interaction.user, guild);
+        }
+
         if (
           !db
             .get('voteUser')
@@ -308,39 +386,25 @@ module.exports = {
               risingChoice: '',
             })
             .write();
+          await Profile.updateOne(
+            { UserID: interaction.user.id, GuildID: guild.id },
+            { $inc: { Wallet: Number(voteReward) } }
+          );
         }
 
-        const profile = await Profile.find({
-          UserID: interaction.user.id,
-          GuildID: guild.id,
+        await interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor('BLURPLE')
+              .setTitle(`${interaction.user.username}'s Earning`)
+              .setDescription(
+                `You will have collected Voting Participation Rewards (${voteReward}SBT).\n
+                  ${interaction.values[0]}에 투표하셨습니다.`
+              ),
+          ],
+          ephemeral: true,
         });
 
-        if (!profile.length) {
-          await createProfile(interaction.user, guild);
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed().setColor('BLURPLE').setDescription(
-                `Creating profile.\n
-                You will have collected Voting Participation Rewards (${'10€'}).\n
-                ${interaction.values[0]}에 투표하셨습니다.`
-              ),
-            ],
-            ephemeral: true,
-          });
-        } else {
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setColor('BLURPLE')
-                .setTitle(`${interaction.user.username}'s Earning`)
-                .setDescription(
-                  `You will have collected Voting Participation Rewards (${'10€'}).\n
-                  ${interaction.values[0]}에 투표하셨습니다.`
-                ),
-            ],
-            ephemeral: true,
-          });
-        }
         if (interaction.customId === 'selectBluechip') {
           db.get('voteUser')
             .find({ id: interaction.user.id, voteId: voteId })

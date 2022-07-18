@@ -9,5 +9,6 @@ module.exports = model(
     lastDaily: Date,
     lastWeekly: Date,
     lastMonthly: Date,
+    lastReview: Date,
   })
 );

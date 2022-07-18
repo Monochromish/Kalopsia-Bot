@@ -88,6 +88,7 @@ module.exports = {
         lastWeekly: new Date(),
         lastMonthly: new Date(),
         passiveUpdated: new Date(),
+        lastReview: 0,
       }).save();
       return true;
     }

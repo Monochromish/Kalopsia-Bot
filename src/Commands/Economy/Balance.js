@@ -10,8 +10,8 @@ module.exports = {
       name: 'user',
       description: 'Mention user.',
       required: false,
-      type: 'USER'
-    }
+      type: 'USER',
+    },
   ],
   category: 'Economy',
   async run({ interaction, options, bot, guild }) {
@@ -19,15 +19,18 @@ module.exports = {
 
     const profile = await Profile.find({ UserID: user.id, GuildID: guild.id });
     if (!profile.length) {
-      if (user !== interaction.user) return interaction.reply(`${user} has no profile.`); // Prevents others from creating profiles for other users.
+      if (user !== interaction.user)
+        return interaction.reply(`${user} has no profile.`); // Prevents others from creating profiles for other users.
 
       await createProfile(interaction.user, guild);
       await interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor('BLURPLE')
-            .setDescription(`Creating profile.\nUse this command again to check your balance.`)
-        ]
+            .setDescription(
+              `Creating profile.\nUse this command again to check your balance.`
+            ),
+        ],
       });
     } else {
       await interaction.reply({
@@ -35,9 +38,11 @@ module.exports = {
           new MessageEmbed()
             .setColor('BLURPLE')
             .setTitle(`${user.username}'s Balance`)
-            .setDescription(`**Wallet:** ${profile[0].Wallet} €\n**Bank:** ${profile[0].Bank} €`)
-        ]
+            .setDescription(
+              `**Wallet:** ${profile[0].Wallet} SBT\n**Bank:** ${profile[0].Bank} SBT`
+            ),
+        ],
       });
     }
-  }
+  },
 };
