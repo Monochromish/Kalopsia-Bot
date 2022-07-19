@@ -22,15 +22,16 @@ module.exports = {
           ).value;
           // const guild = bot.guild.fetch(interaction.guildId);
           //reward
+          const users = await bot.guilds.cache.get(guildId);
+          const member = await users.members.cache.get(reviewUserId);
+
           const profile = await Profile.find({
-            UserID: member.id,
+            UserID: reviewUserId,
             GuildID: guildId,
           });
           if (!profile.length) {
-            await createProfile(interaction.user, guild);
+            await createProfile(member, guild);
           }
-          const users = await bot.guilds.cache.get(guildId);
-          const member = await users.members.cache.get(reviewUserId);
 
           if (member.roles.cache.find((e) => e.id === '969414258116923392')) {
             //홀더
