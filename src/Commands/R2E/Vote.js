@@ -288,7 +288,7 @@ module.exports = {
 
       // 랭킹 reward지급 //
       const voteRewarded = db.get('voteRewarded').value();
-      if (voteRewarded.includes(voteId)) {
+      if (voteRewarded?.includes(voteId)) {
         //이미 지급
       } else {
         //미지급
