@@ -3,3 +3,10 @@ node_modules
 package-lock.json
 yarn.lock
 /db.json
+
+# 임의로 추가
+.eslintrc
+config.js
+credentials.json
+
+.gitignore

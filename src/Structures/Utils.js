@@ -1,8 +1,11 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { promisify } = require('util');
 const glob = require('glob');
+const credentials = require('../../credentials.json');
 const axios = require('axios').default;
 const Profile = require('../Models/Profile');
+const Order = require('../Models/Order');
+const { google } = require('googleapis');
 
 module.exports = {
   getRandomString: (length) => {
@@ -94,6 +97,20 @@ module.exports = {
     }
     return false;
   },
+  createOrder: async function createOrder(guildId, orderInformation) {
+    await new Order({
+      GuildID: guildId,
+      UserID: orderInformation[1],
+      UserName: orderInformation[0],
+      Address: orderInformation[4],
+      Phone: orderInformation[5],
+      Size: orderInformation[7],
+      MerchNumber: orderInformation[3],
+      Count: orderInformation[6],
+      OrderDate: orderInformation[2],
+    }).save();
+    return true;
+  },
   shuffleArray: function (array) {
     let currentIndex = array.length,
       randomIndex;
@@ -106,5 +123,23 @@ module.exports = {
       ];
     }
     return array;
+  },
+  googleAuthorize: async () => {
+    return new Promise(function (resolve, reject) {
+      const googleClient = new google.auth.JWT(
+        credentials.client_email,
+        null,
+        credentials.private_key,
+        ['https://www.googleapis.com/auth/spreadsheets']
+      );
+      googleClient.authorize((error) => {
+        if (error) {
+          console.error(error);
+          reject(error);
+        } else {
+          resolve(googleClient);
+        }
+      });
+    });
   },
 };

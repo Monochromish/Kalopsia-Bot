@@ -19,6 +19,7 @@
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "glob": "^8.0.3",
+    "googleapis": "^105.0.0",
     "html-entities": "^2.3.3",
     "lowdb": "1.0.0",
     "mathjs": "^10.6.4",

@@ -5,6 +5,7 @@ module.exports = {
   },
   guildOnly: {
     enabled: true,
-    guildID: '947767825232175164', // Guild ID
+    guildID: '871741613821542460',
+    // guildID: '947767825232175164', // Guild ID
   }, // If set to true, slash commands will only be registered only under the guild with specified guild ID; Else globally registered.
 };
