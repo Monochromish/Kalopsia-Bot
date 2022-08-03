@@ -238,9 +238,9 @@ module.exports = {
         ? fetchVotingData
         : [fetchVotingData];
       const bluechipCountObject = votingData.reduce((r, e) => {
-        // if (e.bluechipChoice && e.bluechipChoice.length > 0) {
-        r[`${e.bluechipChoice}`] = (r[`${e.bluechipChoice}`] || 0) + 1;
-        // }
+        if (e.bluechipChoice && e.bluechipChoice.length > 0) {
+          r[`${e.bluechipChoice}`] = (r[`${e.bluechipChoice}`] || 0) + 1;
+        }
         return r;
       }, {});
       const bluechipCountArray = Object.entries(bluechipCountObject).map(
@@ -251,9 +251,9 @@ module.exports = {
       bluechipCountArray.sort((a, b) => b.count - a.count);
 
       const risingCountObject = votingData.reduce((r, e) => {
-        // if (e.risingChoice && e.risingChoice.length > 0) {
-        r[`${e.risingChoice}`] = (r[`${e.risingChoice}`] || 0) + 1;
-        // }
+        if (e.risingChoice && e.risingChoice.length > 0) {
+          r[`${e.risingChoice}`] = (r[`${e.risingChoice}`] || 0) + 1;
+        }
         return r;
       }, {});
       const risingCountArray = Object.entries(risingCountObject).map((e) => {
@@ -288,7 +288,7 @@ module.exports = {
 
       // 랭킹 reward지급 //
       const voteRewarded = db.get('voteRewarded').value();
-      if (voteRewarded.includes(voteId)) {
+      if (voteRewarded?.includes(voteId)) {
         //이미 지급
       } else {
         //미지급
