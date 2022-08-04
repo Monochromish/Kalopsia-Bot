@@ -7,8 +7,7 @@ module.exports = {
   permission: 'ADMINISTRATOR',
   type: 'COMMAND',
   run: async ({ interaction, guild }) => {
-    const dailyCheckChannelId = '1001799413674541096';
-    // const dailyCheckChannelId = '998515589230374964';
+    const dailyCheckChannelId = '998515589230374964';
     const channel = guild.channels.cache.get(dailyCheckChannelId);
     const resultTestChannelId = '1003470340481101906';
     const dailyCheckMessages = new Map();
@@ -22,16 +21,16 @@ module.exports = {
       endRowIndex = 1;
     let beforeMessageId = null;
 
-    // if (interaction.channelId !== resultTestChannelId) {
-    //   await interaction.reply({
-    //     embeds: [
-    //       new MessageEmbed()
-    //         .setColor('RED')
-    //         .setDescription('Run this command in result-test channel'),
-    //     ],
-    //   });
-    //   return;
-    // }
+    if (interaction.channelId !== resultTestChannelId) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Run this command in result-test channel'),
+        ],
+      });
+      return;
+    }
 
     await interaction.deferReply();
 

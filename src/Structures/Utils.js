@@ -104,9 +104,8 @@ module.exports = {
       UserName: orderInformation[0],
       Address: orderInformation[4],
       Phone: orderInformation[5],
-      Size: orderInformation[7],
-      MerchNumber: orderInformation[3],
-      Count: orderInformation[6],
+      Size: orderInformation[6],
+      GoodsNumber: orderInformation[3],
       OrderDate: orderInformation[2],
     }).save();
     return true;
@@ -141,5 +140,11 @@ module.exports = {
         }
       });
     });
+  },
+  getCurrentKoreanDate: () => {
+    const date = new Date();
+    const utc = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+    const addTime = 9 * 60 * 60 * 1000;
+    return new Date(utc + addTime);
   },
 };

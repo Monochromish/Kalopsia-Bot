@@ -7,7 +7,7 @@ const Profile = require('../../Models/Profile');
 module.exports = {
   name: 'balance-result',
   description: `Print user's balance to google sheet`,
-  permission: 'ADMINISTRATOR',
+  permissions: 'ADMINISTRATOR',
   type: 'COMMAND',
   async run({ interaction, bot }) {
     const guild = await bot.guilds.cache.get(guildId);
@@ -20,16 +20,16 @@ module.exports = {
     const balanceData = [];
     let startRowIndex = 1;
 
-    // if (interaction.channelId !== resultTestChannelId) {
-    //   await interaction.reply({
-    //     embeds: [
-    //       new MessageEmbed()
-    //         .setColor('RED')
-    //         .setDescription('Run this command in result-test channel'),
-    //     ],
-    //   });
-    //   return;
-    // }
+    if (interaction.channelId !== resultTestChannelId) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Run this command in result-test channel'),
+        ],
+      });
+      return;
+    }
 
     await interaction.deferReply();
 

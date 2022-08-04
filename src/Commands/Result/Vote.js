@@ -20,16 +20,16 @@ module.exports = {
     const voteData = [];
     let startRowIndex = 1;
 
-    // if (interaction.channelId !== resultTestChannelId) {
-    //   await interaction.reply({
-    //     embeds: [
-    //       new MessageEmbed()
-    //         .setColor('RED')
-    //         .setDescription('Run this command in result-test channel'),
-    //     ],
-    //   });
-    //   return;
-    // }
+    if (interaction.channelId !== resultTestChannelId) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Run this command in result-test channel'),
+        ],
+      });
+      return;
+    }
 
     await interaction.deferReply();
 

@@ -7,8 +7,7 @@ module.exports = {
   permission: 'ADMINISTRATOR',
   type: 'COMMAND',
   run: async ({ interaction, guild }) => {
-    const reviewChannelId = '1001351273309814874';
-    // const reviewChannelId = '997434793505595492';
+    const reviewChannelId = '997434793505595492';
     const resultTestChannelId = '1003470340481101906';
     const channel = guild.channels.cache.get(reviewChannelId);
     const reviewMessages = new Map();
@@ -20,16 +19,16 @@ module.exports = {
       endRowIndex = 1;
     let beforeMessageId = null;
 
-    // if (interaction.channelId !== resultTestChannelId) {
-    //   await interaction.reply({
-    //     embeds: [
-    //       new MessageEmbed()
-    //         .setColor('RED')
-    //         .setDescription('Run this command in result-test channel'),
-    //     ],
-    //   });
-    //   return;
-    // }
+    if (interaction.channelId !== resultTestChannelId) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Run this command in result-test channel'),
+        ],
+      });
+      return;
+    }
 
     await interaction.deferReply();
 

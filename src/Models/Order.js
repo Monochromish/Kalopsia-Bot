@@ -7,9 +7,8 @@ module.exports = model(
     UserName: String,
     Address: String,
     Phone: String,
-    OrderDate: String,
     Size: String,
-    MerchNumber: Number,
-    Count: Number,
+    GoodsNumber: Number,
+    OrderDate: Date,
   })
 );
