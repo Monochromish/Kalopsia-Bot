@@ -32,6 +32,20 @@ module.exports = {
     const userId = interaction.user.id;
     const profile = await Profile.find({ UserID: userId, GuildID: guild.id });
 
+    //temp
+    const testChannelId = '991544787184390144';
+
+    if (interaction.channelId !== testChannelId) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Run this command in result-test channel'),
+        ],
+      });
+      return;
+    }
+
     if (!profile.length) {
       await interaction.reply({
         embeds: [

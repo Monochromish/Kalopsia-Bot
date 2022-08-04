@@ -7,7 +7,7 @@ const Profile = require('../../Models/Profile');
 module.exports = {
   name: 'balance-result',
   description: `Print user's balance to google sheet`,
-  permissions: 'ADMINISTRATOR',
+  permission: 'ADMINISTRATOR',
   type: 'COMMAND',
   async run({ interaction, bot }) {
     const guild = await bot.guilds.cache.get(guildId);
