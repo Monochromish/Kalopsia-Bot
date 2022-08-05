@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Profile = require('../Models/Profile');
+const Goods = require('../Models/Goods');
 const structureConfig = require('../Structures/Config');
 const { createOrder, getCurrentKoreanDate } = require('../Structures/Utils');
 const guildId = structureConfig.guildOnly.guildID;
@@ -19,6 +20,7 @@ module.exports = {
       const [goodsNumber, goodsPrice] = interaction.customId.match(/\d+/g);
       const sheetName = 'order';
       const profile = await Profile.find({ UserID: userId, GuildID: guild.id });
+      const goods = await Goods.find({ GoodsID: goodsNumber });
       interaction.components.map((component) => {
         const componentProperty = component.components[0];
         inputValue.push(componentProperty.value);
@@ -38,13 +40,27 @@ module.exports = {
         return;
       }
 
+      if (goods[0].IsSoldout) {
+        await interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor('RED')
+              .setDescription(
+                'This goods is soldout. Please buy another goods'
+              ),
+          ],
+        });
+        return;
+      }
+
+      await Goods.updateOne({ GoodsID: goodsNumber }, { IsSoldout: true });
+      await createOrder(guild.id, inputValue);
+      inputValue.splice(2, 1, today.toISOString().slice(0, 10));
+      await postOrderGoogleSheet(`${sheetName}!${cellRange}`, inputValue);
       await Profile.updateOne(
         { UserID: userId, GuildID: guild.id },
         { $inc: { Wallet: -goodsPrice } }
       );
-      await createOrder(guild.id, inputValue);
-      inputValue.splice(2, 1, today.toISOString().slice(0, 10));
-      await postOrderGoogleSheet(`${sheetName}!${cellRange}`, inputValue);
       await interaction.reply({
         embeds: [
           new MessageEmbed()

@@ -8,6 +8,7 @@ module.exports = {
   type: 'COMMAND',
   run: async ({ interaction, guild }) => {
     const reviewChannelId = '997434793505595492';
+    // const reviewChannelId = '1001351273309814874';
     const resultTestChannelId = '1003470340481101906';
     const channel = guild.channels.cache.get(reviewChannelId);
     const reviewMessages = new Map();

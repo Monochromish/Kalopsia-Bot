@@ -5,6 +5,7 @@ const credentials = require('../../credentials.json');
 const axios = require('axios').default;
 const Profile = require('../Models/Profile');
 const Order = require('../Models/Order');
+const Goods = require('../Models/Goods');
 const { google } = require('googleapis');
 
 module.exports = {
@@ -107,6 +108,17 @@ module.exports = {
       Size: orderInformation[6],
       GoodsNumber: orderInformation[3],
       OrderDate: orderInformation[2],
+    }).save();
+    return true;
+  },
+  createGoods: async function createGoods(goods) {
+    await new Goods({
+      GoodsID: goods.id,
+      Src: goods.src,
+      Title: goods.title,
+      Size: goods.size,
+      Price: goods.price,
+      IsSoldout: goods.isSoldout,
     }).save();
     return true;
   },

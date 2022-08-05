@@ -6,11 +6,8 @@ const {
 } = require('discord.js');
 const structureConfig = require('../../Structures/Config');
 const guildId = structureConfig.guildOnly.guildID;
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const adapter = new FileSync('db.json');
-const db = low(adapter);
 const Profile = require('../../Models/Profile');
+const Goods = require('../../Models/Goods');
 
 module.exports = {
   name: 'buy',
@@ -26,25 +23,10 @@ module.exports = {
   type: 'COMMAND',
   async run({ interaction, bot }) {
     const goodsNumber = interaction.options.getNumber('number');
-    const goodsList = db.get('goodsList').value();
-    const goods = goodsList.find((goods) => goods.id === goodsNumber);
+    const goods = await Goods.find({ GoodsID: goodsNumber });
     const guild = await bot.guilds.cache.get(guildId);
     const userId = interaction.user.id;
     const profile = await Profile.find({ UserID: userId, GuildID: guild.id });
-
-    //temp
-    const testChannelId = '991544787184390144';
-
-    if (interaction.channelId !== testChannelId) {
-      await interaction.reply({
-        embeds: [
-          new MessageEmbed()
-            .setColor('RED')
-            .setDescription('Run this command in result-test channel'),
-        ],
-      });
-      return;
-    }
 
     if (!profile.length) {
       await interaction.reply({
@@ -54,7 +36,7 @@ module.exports = {
             .setDescription(`You don't have profile. Make a profile first.`),
         ],
       });
-    } else if (!goods) {
+    } else if (!goods.length) {
       await interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -64,7 +46,15 @@ module.exports = {
             ),
         ],
       });
-    } else if (profile[0].Wallet < goods.price) {
+    } else if (goods[0].IsSoldout) {
+      await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription('This goods is soldout. Please buy another goods.'),
+        ],
+      });
+    } else if (profile[0].Wallet < goods[0].Price) {
       await interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -106,8 +96,8 @@ module.exports = {
         addressActionRow,
         phoneNumberActionRow,
       ];
-      if (goods.size) {
-        const sizeOptions = goods.size.join(', ');
+      if (goods[0].Size.length > 0) {
+        const sizeOptions = goods[0].Size.join(', ');
         const sizeInput = new TextInputComponent()
           .setCustomId('SizeInput')
           .setLabel(`What's your size? (${sizeOptions})`)
@@ -118,7 +108,9 @@ module.exports = {
         components.push(sizeActionRow);
       }
       const modal = new Modal()
-        .setCustomId(`orderInformationNumber${goodsNumber}Price${goods.price}`)
+        .setCustomId(
+          `orderInformationNumber${goodsNumber}Price${goods[0].Price}`
+        )
         .setTitle('Order Information')
         .addComponents(components);
 

@@ -7,6 +7,7 @@ module.exports = {
   permission: 'ADMINISTRATOR',
   type: 'COMMAND',
   run: async ({ interaction, guild }) => {
+    // const dailyCheckChannelId = '1001799413674541096';
     const dailyCheckChannelId = '998515589230374964';
     const channel = guild.channels.cache.get(dailyCheckChannelId);
     const resultTestChannelId = '1003470340481101906';
