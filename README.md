@@ -66,7 +66,7 @@ Bot should now be running on token provided in `.env` file.
 
 ## Came across any bugs? Found typos? Or facing difficulties in self hosting?
 
-Feel free to open an issue on this repository. You can also contact me on Discord: [Monochromish](https://discord.com/users/500315184510795819)!
+Feel free to open an issue on this repository!
 
 ## Notice & Credits
 
