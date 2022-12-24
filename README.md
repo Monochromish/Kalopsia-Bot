@@ -40,7 +40,7 @@ We welcome contributions to Kalopsia Bot. If you would like to make changes, ple
 
 ## Credits
 
-Kalopsia Bot was written by Monochromish under the [MIT](./LICENCE) License. If you would like to support this project, please consider starring this repository.
+Kalopsia Bot was written by Monochromish. If you would like to support this project, please consider starring this repository.
 
 ## Acknowledgments
 
