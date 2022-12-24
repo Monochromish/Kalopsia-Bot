@@ -1,82 +1,47 @@
 # Kalopsia Bot ♣️
 
-![MOSHED-2021-4-27-14-48-27](https://user-images.githubusercontent.com/79590499/116218250-f8a58800-a767-11eb-86fa-9c1ea5797100.jpg)
-
 [![Run on Repl.it](https://replit.com/badge/github/Monochromish/Kalopsia-Bot)](https://repl.it/github/Monchromish/Kalopsia-Bot)
 
-Kalopsia Bot is an Open-Source Discord.js v13 Bot
+Kalopsia Bot is an open-source Discord.js v13 bot with a variety of features, including:
 
-With features such as
+- Slash commands
+- Staff commands
+- Fun and entertaining commands
+- Utility commands
+- NSFW commands
+- Economy system
+- MongoDB integration
 
-- Slash Commands
-- Staff Commands
-- Fun and Entertaining Commands
-- Utility Commands
-- NSFW Commands
-- Economy System
-- MongoDB Integration
-- And many more!
+## Prerequisites
 
-Feeling experimental? Want to try Kalopsia Bot before building? [Invite the public version to your Discord Server!](https://discord.com/oauth2/authorize?client_id=966786765132267581&scope=bot%20applications.commands&permissions=8) (Up to date)
-
-## Requirements
+To use and develop Kalopsia Bot, you will need:
 
 - [Node.js](https://nodejs.org)
-- [Yarn](https://yarnpkg.com) (Recommended although NPM can also be used)
-- [Git](https://git-scm.com) (Git is optional since you can just install the repository directly)
-- Experience with [JavaScript](https://www.learn-js.org) and [Discord.js](https://discord.js.org) (Preferably Discord.js v13)
+- [Yarn](https://yarnpkg.com) (recommended, although NPM can also be used)
+- [Git](https://git-scm.com) (optional, you can also just download the repository directly)
+- [MongoDB](https://www.mongodb.com/atlas/database)
+- Experience with [JavaScript](https://www.learn-js.org) and [Discord.js](https://discord.js.org) (preferably Discord.js v13)
 
-## Installation
+## Getting Started
 
-You can either choose to download this repository files directly or clone
+To set up Kalopsia Bot on your machine:
 
-If you choose to clone, Make sure to have [Git](https://git-scm.com) installed and run the command given below in directory of your choice.
+1. Clone or download the repository
+2. Modify the `example.env` file and rename it to `.env`
+3. Install the necessary dependencies using your package manager
+4. Run the bot
 
-```console
-git clone https://github.com/Monochromish/Kalopsia-Bot.git && cd Kalopsia-Bot
-```
+## Contributing
 
-## Setup
+We welcome contributions to Kalopsia Bot. If you would like to make changes, please:
 
-Kalopsia Bot works on MongoDB
+1. Test your changes locally
+2. Open a pull request with a clear description of your changes and the reasoning behind them
 
-For self-hosting, you would have to get a MongoURL
+## Credits
 
-**Refer to [this video for help](https://www.youtube.com/watch?v=8no3SktqagY)**
+Kalopsia Bot was written by Monochromish under the [MIT](./LICENCE) License. If you would like to support this project, please consider starring this repository.
 
-Duplicate the `example.env` file and rename it to `.env`
+## Acknowledgments
 
-Modify the `.env` file
-
-Run `npm install --save` in the console
-
-OR
-
-Run `yarn install` in the console (Recommended)
-
-## Self Hosting
-
-Run `node .` in the console
-
-OR
-
-Run `yarn run run` in the console (Recommended)
-
-Bot should now be running on token provided in `.env` file.
-
-## Came across any bugs? Found typos? Or facing difficulties in self hosting?
-
-Feel free to open an issue on this repository!
-
-## Notice & Credits
-
-I have removed Music commands but I'll be adding a music system, possibly a button one and working on economy system soon. Stay tuned!
-
-I'll later create a wiki for this repository, which will have guides to contribute and report and shit.
-
-
-This bot was written by Monochromish.
-
-Thanks to [Jacobin](https://github.com/Jakob5358) for big help in moderation system.
-
-To support this project, star this repository; I'll greatly appreciate it!
+Thanks to [Jacobin](https://github.com/Jakob5358) for their help with the moderation system.
