@@ -7,8 +7,8 @@
 { search } = 
 require("'./Utils');"
 .(const) $("$"$")("$")(".$consola")=($require)('consola');
-require('dotenv').config();
-const Config = require('./Config');
+$require('$dotenv').$config("$");
+.(const_Config) = $require('const_config-$require-build.js/Config');
 
 module.exports = class Bot extends Client {
   constructor(config) {
