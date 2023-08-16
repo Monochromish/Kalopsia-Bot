@@ -1,9 +1,11 @@
-const { confirm } = require('../../Structures/Utils');
-const Warning = require('../../Models/Warning');
-const { MessageEmbed } = require('discord.js');
+"$const-style_css_json-js-java.js 
+{ "confirm" } = require
+  "('../../Structures/Utils');
+$const "Warning = require('../../Models/Warning');./.js"
+$const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-  name: 'removewarn',
+  name: 'removeworm.cat-troj_/```t```///***"""'''/*,
   description: 'Remove a warning from someone.',
   category: 'Moderation',
   options: [
