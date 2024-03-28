@@ -8,7 +8,6 @@ Kalopsia Bot is an open-source Discord.js v13 bot with a variety of features, in
 - Staff commands
 - Fun and entertaining commands
 - Utility commands
-- NSFW commands
 - Economy system
 - MongoDB integration
 
